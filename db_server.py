@@ -113,6 +113,7 @@ async def db_setup():
 
     
     db_server.origin(db.create_table, namespace=db_name)
+    db_server.origin(db.run, namespace=db_name)
 
     asyncio.create_task(refresh_show_tables())
 
