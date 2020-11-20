@@ -91,12 +91,12 @@ async def db_setup():
     for table in db.tables:
         register_table(table)
 
-    @db_server.origin(namespace=db.db_name)
+    @db_server.origin(namespace=db_name)
     async def show_tables():
         table_list = []
         for table in db.tables:
             for func in {'insert', 'update', 'select', 'delete'}:
-                if not f"{table}_func" in db_server.namespaces[db.db_name]:
+                if not f"{table}_func" in db_server.namespaces[db_name]:
                     register_table(table)
                     break
             table_list.append(table)
@@ -111,9 +111,10 @@ async def db_setup():
             except Exception as e:
                 break
 
-    asyncio.create_task(refresh_show_tables())
     
-    db_server.origin(db.create_table, namespace=db.db_name)
+    db_server.origin(db.create_table, namespace=db_name)
+
+    asyncio.create_task(refresh_show_tables())
 
     server.db_server = db_server
     server.db = db
