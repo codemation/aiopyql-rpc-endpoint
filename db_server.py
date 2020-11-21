@@ -24,7 +24,7 @@ async def db_setup():
     if db_type in {'mysql', 'postgres'}:
         for cfg in {'HOST','PORT', 'USER', 'PASSWORD'}:
             db_config[cfg.lower()] = os.environ.get(f"DB_{cfg}")
-            if not db_config[cfg]:
+            if not db_config[cfg.lower()]:
                 raise Exception(f"missing required DB_{cfg} environment variable")
     else:
         sqlite_db_path = os.environ.get('PYQL_VOLUME_PATH')
