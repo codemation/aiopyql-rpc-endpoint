@@ -22,7 +22,11 @@ async def db_setup():
     db_config['db_type'] = db_type
     db_config['database'] = db_name
     if db_type in {'MYSQL', 'POSTGRES'}:
-        for cfg in {'DB_HOST', 'DB_PORT', 'DB_USER', 'DB_PASSWORD'}:
+        db_host = os.environ['DB_HOST']
+        if not db_host:
+            raise Exception(f"missing required DB_HOST environment variable")
+        db_config['host'] = db_host
+        for cfg in {'DB_PORT', 'DB_USER', 'DB_PASSWORD'}:
             db_config[cfg] = os.environ.get(cfg)
             if not db_config[cfg]:
                 raise Exception(f"missing required {cfg} environment variable")
