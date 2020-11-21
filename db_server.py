@@ -21,7 +21,7 @@ async def db_setup():
 
     db_config['db_type'] = db_type
     db_config['database'] = db_name
-    if db_type in {'MYSQL', 'POSTGRES'}:
+    if db_type in {'mysql', 'postgres'}:
         for cfg in {'HOST','PORT', 'USER', 'PASSWORD'}:
             db_config[cfg.lower()] = os.environ.get(f"DB_{cfg}")
             if not db_config[cfg]:
