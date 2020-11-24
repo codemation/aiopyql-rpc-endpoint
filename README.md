@@ -48,7 +48,33 @@ Template for deploying an EasyRpcServer in front of an aiopyql conncted database
         -e RPC_SECRET='abcd1234' \
         joshjamison/aiopyql-rpc-endpoint:latest
 
-# Accessing the Endpoint
+# Shared Functions
+Connected proxies will have access the the following methdods:
+
+### Database Methods
+- create_table: aiopyql method for creating new tables
+- show_tables: list existing table names
+- run: run a database query, results are unformatted
+
+<br>
+
+### Table methods: <br>
+
+For each table, the following methods exists within the EasyProxy 
+
+    proxy['namespace'][f'{table}_{method}']
+
+- insert 
+- update 
+- delete
+- select
+
+Usage for each function can be found in [aiopyql](https://github.com/codemation/aiopyql)
+
+
+
+
+# Example: Accessing the Endpoint
 
     # client.py
 
@@ -110,10 +136,15 @@ Template for deploying an EasyRpcServer in front of an aiopyql conncted database
     )
 
     # select
-    await server.data['testdb']['keystore_update']( 
+    selection = await server.data['testdb']['keystore_update']( 
         '*',
         where={'key': 'new_key'}
     )
+    print(f"selection: {selection}")
+
+    # get_schema
+
+    schema = await server.data['testdb]['keystore_get_schema']()
 
 
-## 
+
