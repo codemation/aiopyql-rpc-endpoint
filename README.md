@@ -94,6 +94,7 @@ Usage for each function can be found in [aiopyql](https://github.com/codemation/
             server_secret='abcd1234',
             namespace='testdb'
         )
+<br>
 
     # create_table
 
@@ -107,12 +108,13 @@ Usage for each function can be found in [aiopyql](https://github.com/codemation/
         cache_enabled=True
     )
     print(f"create_table_result: {create_table_result}")
-
+<br>
 
     # show_tables
 
     show_tables = await server.data['testdb']['show_tables']()
     print(f"show tables: {show_tables}")
+<br>
 
     # run
 
@@ -120,20 +122,24 @@ Usage for each function can be found in [aiopyql](https://github.com/codemation/
 
     run_query = await server.data['testdb']['run'](query)
     print(f"run_query results: {run_query}")
+<br>
 
     # insert
     await server.data['testdb']['keystore_insert']('new_key': 'new_value')
+<br>
 
     # update
     await server.data['testdb']['keystore_update'](
         'value': 'updated_value', 
         where={'key': 'new_key'}
     )
+<br>
 
     # delete
     await server.data['testdb']['keystore_update']( 
         where={'key': 'new_key'}
     )
+<br>
 
     # select
     selection = await server.data['testdb']['keystore_update']( 
@@ -141,10 +147,11 @@ Usage for each function can be found in [aiopyql](https://github.com/codemation/
         where={'key': 'new_key'}
     )
     print(f"selection: {selection}")
+<br>
 
     # get_schema
-
     schema = await server.data['testdb]['keystore_get_schema']()
+    print(f"schema: {schema}")
 
 
 
