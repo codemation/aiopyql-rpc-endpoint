@@ -86,7 +86,7 @@ async def db_setup():
             return await db.tables[table].get_schema(*args, **kwargs)
         get_schema.__name__ = f"{table}_get_schema"
 
-        for func in {insert, select, delete, select, get_schema}:
+        for func in {insert, update, select, delete, select, get_schema}:
             db_server.origin(func, namespace=db_name)
     for table in db.tables:
         register_table(table)
@@ -106,8 +106,8 @@ async def db_setup():
         while True:
             try:
                 db.log.warning(f"running show_tables to refresh {db_name} namespace ")
-                await asyncio.sleep(10)
                 await show_tables()
+                await asyncio.sleep(10)
             except Exception as e:
                 break
 
