@@ -83,7 +83,7 @@ async def db_setup():
         delete.__name__ = f"{table}_delete"
 
         async def get_schema(**kwargs):
-            return await db.tables[table].delete(*args, **kwargs)
+            return await db.tables[table].get_schema(*args, **kwargs)
         get_schema.__name__ = f"{table}_get_schema"
 
         for func in {insert, select, delete, select, get_schema}:
@@ -96,7 +96,7 @@ async def db_setup():
         table_list = []
         for table in db.tables:
             for func in {'insert', 'update', 'select', 'delete'}:
-                if not f"{table}_func" in db_server.namespaces[db_name]:
+                if not f"{table}_{func}" in db_server.namespaces[db_name]:
                     register_table(table)
                     break
             table_list.append(table)
