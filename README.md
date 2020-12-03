@@ -5,6 +5,18 @@ Template for deploying an EasyRpcServer in front of an aiopyql conncted database
 - Quickly depoy and share an aiopyql database connection 
 - Shared Database Cache
 
+## Env
+| ENV Variable | Values | Required? |
+|--------------|--------|-----------|
+| DB_TYPE | 'sqlite', 'mysql', 'postgres' | yes |
+| DB_NAME | 'database-name' | yes |
+| RPC_SECRET | 'abcd1234' | yes |
+| DB_USER | "database-user' | yes - mysql / postgres |
+| DB_PASSWORD | 'abcd1234' | yes - mysql / postgres |
+| DB_HOST | 'localhost', '0.0.0.0', '192.168.1.1' | yes - mysql / postgres |
+| DB_PORT | defaults: 3304 - mysql, 5432 - postgres | yes - yes - mysql / postgres |
+| RPC_PATH | '/special-db-path' '/generic' '/ws/nested' | no - defaults to '/ws/DB_NAME' |
+
 # Quick Start - Sqlite
 
     $ docker run -d --name aiopyql-testdb \
@@ -34,7 +46,12 @@ Template for deploying an EasyRpcServer in front of an aiopyql conncted database
 
     $ mkdir pg_data
 
-    $ docker run --name pgtest  -e POSTGRES_PASSWORD=abcd1234 -e POSTGRES_DB=postgres_db -p 5432:5432 -v $(pwd)/pg_data:/var/lib/postgresql/data -d postgres:latest
+    $ docker run --name pgtest -d \ 
+        -e POSTGRES_PASSWORD=abcd1234 \
+        -e POSTGRES_DB=postgres_db \
+        -p 5432:5432 \
+        -v $(pwd)/pg_data:/var/lib/postgresql/data \
+        postgres:latest
 
 
     $ docker run -d --name aiopyql-pg-testdb \
@@ -49,7 +66,7 @@ Template for deploying an EasyRpcServer in front of an aiopyql conncted database
         joshjamison/aiopyql-rpc-endpoint:latest
 
 # Shared Functions
-Connected proxies will have access the the following methdods:
+Connected proxies will have access to aiopyql Database & Table methods
 
 ### Database Methods
 - create_table: aiopyql method for creating new tables
@@ -64,14 +81,14 @@ For each table, the following methods exists within the EasyProxy
 
     proxy['namespace'][f'{table}_{method}']
 
+Methods
 - insert 
 - update 
 - delete
 - select
+- get_schema
 
 Usage for each function can be found in [aiopyql](https://github.com/codemation/aiopyql)
-
-
 
 
 # Example: Accessing the Endpoint
