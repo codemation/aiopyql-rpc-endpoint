@@ -62,8 +62,7 @@ async def db_setup():
         **db_config
     )
 
-    # register each func table namespace 
-    
+    # register each func table namespace
         
     def register_table(table):
         async def insert(**kwargs):
@@ -101,6 +100,23 @@ async def db_setup():
                     break
             table_list.append(table)
         return table_list
+
+    @db_server.origin(namespace=db_name)
+    async def create_table(
+        name: str, 
+        columns: list, 
+        prim_key: str,
+        **kw
+    ):
+        result = await db.create_table(
+            name=name, 
+            columns=columns, 
+            prim_key=prim_key, 
+            **kw
+        )
+        await show_tables()
+        return result
+
     
     async def refresh_show_tables():
         while True:
@@ -111,8 +127,6 @@ async def db_setup():
             except Exception as e:
                 break
 
-    
-    db_server.origin(db.create_table, namespace=db_name)
     db_server.origin(db.run, namespace=db_name)
 
     asyncio.create_task(refresh_show_tables())
