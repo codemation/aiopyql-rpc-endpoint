@@ -81,11 +81,19 @@ async def db_setup():
             return await db.tables[table].delete(*args, **kwargs)
         delete.__name__ = f"{table}_delete"
 
+        async def set_item(key, values):
+            return await db.tables[table].set_item(key, values)
+        set_item.__name__ = f"{table}_set_item"
+
+        async def get_item(key_val):
+            return await db.tables[table][key_val]
+        get_item.__name__ = f"{table}_get_item"
+
         async def get_schema(**kwargs):
             return await db.tables[table].get_schema(*args, **kwargs)
         get_schema.__name__ = f"{table}_get_schema"
 
-        for func in {insert, update, select, delete, select, get_schema}:
+        for func in {insert, update, select, delete, select, get_schema, set_item, get_item}:
             db_server.origin(func, namespace=db_name)
     for table in db.tables:
         register_table(table)
