@@ -93,82 +93,72 @@ Usage for each function can be found in [aiopyql](https://github.com/codemation/
 
 # Example: Accessing the Endpoint
 
-    # client.py
+    import asyncio
+    from easyrpc.tools.database import EasyRpcProxyDatabase
 
-    from easyrpc.proxy import EasyRpcProxy
-    from fastapi import FastAPI
+    async def main():
 
-    server = FastAPI()
-
-    @server.on_event('startup')
-    async def setup():
-        server.data = {}
-
-        server.data['testdb'] = await EasyRpcProxy.create(
-            '192.168.122.100', 
-            30111, 
-            '/sqlite/database', 
+        db = await EasyRpcProxyDatabase.create(
+            'localhost', 
+            8190, 
+            '/ws/testdb', 
             server_secret='abcd1234',
             namespace='testdb'
         )
 <br>
 
-    # create_table
-
-    create_table_result = await server.data['testdb']['create_table'](
-        'keystore',
-        [
-            ['key', 'str', 'UNIQUE NOT NULL'],
-            ['value', 'str']
-        ],
-        prim_key='key',
-        cache_enabled=True
-    )
-    print(f"create_table_result: {create_table_result}")
+        create_table_result = await db.create_table(
+            'keystore',
+            [
+                ['key', 'str', 'UNIQUE NOT NULL'],
+                ['value', 'str']
+            ],
+            prim_key='key',
+            cache_enabled=True
+        )
+        print(f"create_table_result: {create_table_result}")
 <br>
 
-    # show_tables
+        show_tables = await db.show_tables()
 
-    show_tables = await server.data['testdb']['show_tables']()
-    print(f"show tables: {show_tables}")
+        print(f"show tables: {show_tables}")
 <br>
 
-    # run
+        query = 'select * from sqlite_master'
+        run_query = await db.run(query)
 
-    query = 'select * from sqlite_master'
-
-    run_query = await server.data['testdb']['run'](query)
-    print(f"run_query results: {run_query}")
+        print(f"run_query results: {run_query}")
 <br>
 
-    # insert
-    await server.data['testdb']['keystore_insert']('new_key': 'new_value')
+        keystore = db.tables['keystore']
+
 <br>
 
-    # update
-    await server.data['testdb']['keystore_update'](
-        'value': 'updated_value', 
-        where={'key': 'new_key'}
-    )
+        # insert
+        await keystore.insert(
+            **{'key': 'new_key', 'value': 'new_value'}
+        )
 <br>
 
-    # delete
-    await server.data['testdb']['keystore_update']( 
-        where={'key': 'new_key'}
-    )
+        # update
+        await keystore.update(
+            value='updated_value',
+            where={'key': 'new_key'}
+        )
 <br>
 
-    # select
-    selection = await server.data['testdb']['keystore_update']( 
-        '*',
-        where={'key': 'new_key'}
-    )
-    print(f"selection: {selection}")
+        # delete
+        await keystore.delete( 
+            where={'key': 'new_key'}
+        )
 <br>
 
-    # get_schema
-    schema = await server.data['testdb]['keystore_get_schema']()
-    print(f"schema: {schema}")
+        # select
+        selection = await keystore.select( 
+            '*',
+            where={'key': 'new_key'}
+        )
+        print(f"selection: {selection}")
+<br>
 
-
-
+    asyncio.run(main())
