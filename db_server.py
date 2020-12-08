@@ -95,8 +95,18 @@ async def db_setup():
             return await db.tables[table][key_val]
         get_item.__name__ = f"{table}_get_item"
 
-        async def get_schema(**kwargs):
-            return await db.tables[table].get_schema(*args, **kwargs)
+        async def get_schema():
+            return {
+                table: {
+                    "primary_key": db.tables[table].prim_key,
+                    "foreign_keys": db.tables[table].foreign_keys,
+                    "columns": [
+                        {
+                            "name": col.name, "type": str(col.type.__name__), "mods": col.mods 
+                        } for k, col in db.tables[table].columns.items() 
+                    ]
+                }
+            }
         get_schema.__name__ = f"{table}_get_schema"
 
         for func in {insert, update, select, delete, select, get_schema, set_item, get_item}:
