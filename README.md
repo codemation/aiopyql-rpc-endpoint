@@ -87,7 +87,9 @@ Methods
 - update 
 - delete
 - select
-- get_schema
+- set_item - quick insert / update 
+- get_item - allows bracket index usage on EasyRpcProxyDatabase instance
+- get_schema 
 
 Usage for each function can be found in [aiopyql](https://github.com/codemation/aiopyql)
 
