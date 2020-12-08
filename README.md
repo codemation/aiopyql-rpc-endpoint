@@ -16,6 +16,7 @@ Template for deploying an EasyRpcServer in front of an aiopyql conncted database
 | DB_HOST | 'localhost', '0.0.0.0', '192.168.1.1' | yes - mysql / postgres |
 | DB_PORT | defaults: 3304 - mysql, 5432 - postgres | yes - yes - mysql / postgres |
 | RPC_PATH | '/special-db-path' '/generic' '/ws/nested' | no - defaults to '/ws/DB_NAME' |
+| RPC_DEBUG | 'True', 'False' | no - 'False' if unspecified |
 
 # Quick Start - Sqlite
 
