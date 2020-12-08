@@ -50,12 +50,18 @@ async def db_setup():
     if rcp_enryption:
         rpc_config['encryption_enabled'] = True if rcp_enryption == 1 else False
     
+    rpc_debug = os.environ.get('RPC_DEBUG')
+    if rpc_debug:
+        rpc_config['debug'] = True if rpc_debug == 'True' else False
 
     # Rpc Server
     db_server = await EasyRpcServer.create(
-        server, 
+        server,
         **rpc_config
     )
+
+    # insert logger
+    db_config['log'] = db_server.log
 
     # Database Conection
     db = await Database.create(
