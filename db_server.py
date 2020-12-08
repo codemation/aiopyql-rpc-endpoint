@@ -108,7 +108,7 @@ async def db_setup():
     async def show_tables():
         table_list = []
         for table in db.tables:
-            for func in {'insert', 'update', 'select', 'delete'}:
+            for func in {'insert', 'select', 'update', 'delete', 'set_item', 'get_item', 'get_schema'}:
                 if not f"{table}_{func}" in db_server.namespaces[db_name]:
                     register_table(table)
                     break
