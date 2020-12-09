@@ -104,7 +104,9 @@ async def db_setup():
                         {
                             "name": col.name, "type": str(col.type.__name__), "mods": col.mods 
                         } for k, col in db.tables[table].columns.items() 
-                    ]
+                    ],
+                    "cache_enabled": db.tables[table].cache_enabled,
+                    "max_cache_len": db.tables[table].max_cache_len
                 }
             }
         get_schema.__name__ = f"{table}_get_schema"
