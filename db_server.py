@@ -84,7 +84,7 @@ async def db_setup():
         update.__name__ = f"{table}_update"
         
         async def delete(**kwargs):
-            return await db.tables[table].delete(*args, **kwargs)
+            return await db.tables[table].delete(**kwargs)
         delete.__name__ = f"{table}_delete"
 
         async def set_item(key, values):
